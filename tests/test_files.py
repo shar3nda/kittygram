@@ -4,8 +4,9 @@ from typing import Union
 import yaml
 
 
-def test_infra_files_exist(nginx_dir_info: tuple[Path, str],
-                           expected_nginx_files: set[str]):
+def test_infra_files_exist(
+    nginx_dir_info: tuple[Path, str], expected_nginx_files: set[str]
+):
     path, dir_name = nginx_dir_info
     nginx_dir_content = {obj.name for obj in path.glob('*') if obj.is_file()}
     missing_files = expected_nginx_files - nginx_dir_content
@@ -17,13 +18,14 @@ def test_infra_files_exist(nginx_dir_info: tuple[Path, str],
 
 
 def test_deploy_info_file_content(
-        deploy_file_info: tuple[Path, str],
-        deploy_info_file_content: dict[str, str],
-        expected_deploy_info_file_content: dict[str, str]
+    deploy_file_info: tuple[Path, str],
+    deploy_info_file_content: dict[str, str],
+    expected_deploy_info_file_content: dict[str, str],
 ):
     _, relative_path = deploy_file_info
     missing_content = {
-        key: value for key, value in expected_deploy_info_file_content.items()
+        key: value
+        for key, value in expected_deploy_info_file_content.items()
         if key not in deploy_info_file_content
     }
     action = 'содержится' if len(missing_content) < 2 else 'содержатся'
@@ -36,8 +38,9 @@ def test_deploy_info_file_content(
     )
 
 
-def test_backend_dockerfile_exists(backend_dir_info: tuple[Path, str],
-                                   dockerfile_name: str):
+def test_backend_dockerfile_exists(
+    backend_dir_info: tuple[Path, str], dockerfile_name: str
+):
     path, relative_path = backend_dir_info
     assert (path / dockerfile_name).is_file(), (
         f'Убедитесь, что в директории `{relative_path}/` создан файл '
@@ -45,14 +48,16 @@ def test_backend_dockerfile_exists(backend_dir_info: tuple[Path, str],
     )
 
 
-def test_backend_dokerfile_content(backend_dir_info: tuple[Path, str],
-                                   dockerfile_name: str):
+def test_backend_dokerfile_content(
+    backend_dir_info: tuple[Path, str], dockerfile_name: str
+):
     path, _ = backend_dir_info
     with open(path / dockerfile_name, encoding='utf-8', errors='ignore') as f:
         dockerfile_content = f.read()
     expected_keywords = (
-        'from', 'run',
-        'cmd' if 'cmd' in dockerfile_content.lower() else 'entrypoint'
+        'from',
+        'run',
+        'cmd' if 'cmd' in dockerfile_content.lower() else 'entrypoint',
     )
     for keyword in expected_keywords:
         assert keyword in dockerfile_content.lower(), (
@@ -98,8 +103,9 @@ def test_requirements_location(backend_dir_info: tuple[Path, str]):
     )
 
 
-def has_forbiden_keyword(file_content: dict[str, Union[dict, str]],
-                         forbidden_keyword: str) -> bool:
+def has_forbiden_keyword(
+    file_content: dict[str, Union[dict, str]], forbidden_keyword: str
+) -> bool:
     is_forbidden_keyword_used = False
     for key, value in file_content.items():
         if isinstance(value, dict):
@@ -110,8 +116,9 @@ def has_forbiden_keyword(file_content: dict[str, Union[dict, str]],
     return is_forbidden_keyword_used
 
 
-def test_docker_compose_prod_file_exists(base_dir: Path,
-                                         docker_compose_prod_file_name: str):
+def test_docker_compose_prod_file_exists(
+    base_dir: Path, docker_compose_prod_file_name: str
+):
     path_to_file = base_dir / docker_compose_prod_file_name
     assert path_to_file.is_file(), (
         f'Убедитесь, что корневая директория проекта содержит файл '
