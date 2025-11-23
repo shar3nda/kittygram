@@ -31,6 +31,9 @@ services:
   gateway:
     image: johannkrupp/kittygram_gateway:latest
     env_file: .env
+    depends_on:
+      backend:
+        condition: service_started
     ports:
       - "80:80"
     volumes:
