@@ -1,0 +1,52 @@
+services:
+  postgres:
+    image: postgres:13-alpine
+    env_file: .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  backend:
+    image: johannkrupp/kittygram_backend:latest
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - static:/app/static
+      - media:/app/media
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    command: sh -c 'cp -r /app/build/* /app/static/'
+    image: johannkrupp/kittygram_frontend:latest
+    env_file: .env
+    volumes:
+      - static:/app/static
+
+  gateway:
+    build:
+      context: nginx
+      dockerfile: Dockerfile
+    image: johannkrupp/kittygram_gateway:latest
+    env_file: .env
+    ports:
+      - "80:80"
+    volumes:
+      - static:/app/static
+      - media:/app/media
+
+volumes:
+  pg_data:
+  static:
+  media:
