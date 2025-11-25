@@ -1,16 +1,28 @@
 import os
 from pathlib import Path
 
+from django.core.management.utils import get_random_secret_key
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv(
     'DJANGO_SECRET_KEY',
-    'django-insecure-cg6*%6d51ef8f#4!r3*$vmxm4)abgjw8mo!4y-q*uq1!4$-89$',
+    get_random_secret_key(),
 )
 
-DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+DEBUG = False
+if os.getenv('DEBUG', '').lower() == 'true':
+    DEBUG = True
+
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '')
+if ALLOWED_HOSTS:
+    ALLOWED_HOSTS = ALLOWED_HOSTS.split(',')
+else:
+    ALLOWED_HOSTS = []
+
+if DEBUG:
+    ALLOWED_HOSTS = ['*']
 
 STATIC_ROOT = '/app/collected_static'
 
