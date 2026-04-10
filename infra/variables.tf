@@ -71,7 +71,7 @@ variable "cores" {
 variable "memory" {
   description = "RAM in GB"
   type        = number
-  default     = 1
+  default     = 2
 }
 
 variable "disk_type" {
@@ -90,4 +90,4 @@ variable "nat" {
   description = "Enable NAT for public IP"
   type        = bool
   default     = true
-}                                                                                                                                                             
+}
