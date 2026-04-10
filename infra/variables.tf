@@ -65,7 +65,7 @@ variable "platform_id" {
 variable "cores" {
   description = "Number of vCPUs"
   type        = number
-  default     = 1
+  default     = 2
 }
 
 variable "memory" {
