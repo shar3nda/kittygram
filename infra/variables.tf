@@ -71,7 +71,7 @@ variable "cores" {
 variable "memory" {
   description = "RAM in GB"
   type        = number
-  default     = 2
+  default     = 4
 }
 
 variable "disk_type" {
@@ -83,7 +83,7 @@ variable "disk_type" {
 variable "disk_size" {
   description = "Boot disk size in GB"
   type        = number
-  default     = 20
+  default     = 40
 }
 
 variable "nat" {
